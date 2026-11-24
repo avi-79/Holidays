@@ -153,7 +153,8 @@ The Holidays application uses four Node.js services. The frontend remains the ex
 | Web frontend | Served by Gateway | Holidays stay discovery and account UI |
 | API Gateway | 8080 | Public API entry point, login/session handling and routing |
 | Accommodation Service | 8081 | Stay catalogue and inventory reservation/release |
-| Booking Service | 8082 | User booking records, create and cancel |\n| Payment Service (demo) | 8083 | Simulated payment recording and booking confirmation |
+| Booking Service | 8082 | User booking records, create and cancel |
+| Payment Service (demo) | 8083 | Simulated payment recording and booking confirmation |
 | PostgreSQL | 5432 | Four isolated databases: `holidays_gateway`, `holidays_accommodation`, `holidays_booking`, `holidays_payment` |
 
 The services bind to loopback on the EC2 host. Only Nginx should be exposed publicly. The Gateway owns account records and session cookies; the Booking Service owns booking records; the Accommodation Service owns date-based inventory; the Payment Service stores demo payment records and confirms pending bookings. Booking calls the Accommodation Service API rather than reading its database. A booking starts in `PENDING_PAYMENT`; the Payment Service provides a simulated test-payment step and then marks it `CONFIRMED`. No real card or bank details are collected, and no money is charged.
