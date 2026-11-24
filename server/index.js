@@ -152,7 +152,7 @@ app.post('/api/bookings', requireAuth, (req, res) => {
   const guestName = String(req.body?.guest_name || '').trim();
   const phone = String(req.body?.phone || '').trim();
   if (!stay) return res.status(400).json({ error: 'Please select a valid stay.' });
-  if (!validDate(checkIn) || !validDate(checkOut) || checkOut <= checkIn) return res.status(400).json({ error: 'Choose valid check-in and check-out dates.' });
+  if (!validDate(checkIn) || !validDate(checkOut) || checkOut <= checkIn || checkIn < new Date().toISOString().slice(0, 10)) return res.status(400).json({ error: 'Choose valid future check-in and check-out dates.' });
   if (!Number.isInteger(guests) || guests < 1 || guests > 8) return res.status(400).json({ error: 'Guest count must be between 1 and 8.' });
   if (guestName.length < 2 || guestName.length > 80) return res.status(400).json({ error: 'Enter a valid guest name.' });
   if (phone.length < 7 || phone.length > 25) return res.status(400).json({ error: 'Enter a valid contact number.' });
