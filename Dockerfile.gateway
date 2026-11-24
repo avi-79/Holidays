@@ -1,6 +1,10 @@
 FROM node:20-bookworm-slim
 WORKDIR /app
 
+# package.json includes a native Node dependency; install build tools for npm install.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install dependencies, including Vite, to build the frontend.
 COPY package*.json ./
 RUN npm install
