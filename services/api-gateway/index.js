@@ -11,7 +11,7 @@ const {Pool}=pg;const pool=new Pool({connectionString:process.env.DATABASE_URL||
 const app=express();const port=Number(process.env.PORT||8080);
 const secret=process.env.JWT_SECRET;if(!secret||secret.length<32){console.error('JWT_SECRET must be at least 32 characters');process.exit(1)}
 const accommodationUrl=process.env.ACCOMMODATION_URL||'http://127.0.0.1:8081',bookingUrl=process.env.BOOKING_URL||'http://127.0.0.1:8082',paymentUrl=process.env.PAYMENT_URL||'http://127.0.0.1:8083';
-app.disable('x-powered-by');app.use(helmet());app.use(express.json({limit:'20kb'}));app.use(cookieParser());
+app.disable('x-powered-by');app.use(helmet({contentSecurityPolicy:{directives:{...helmet.contentSecurityPolicy.getDefaultDirectives(),imgSrc:["'self'",'data:','https://images.unsplash.com'],fontSrc:["'self'",'https://fonts.gstatic.com'],styleSrc:["'self'","'unsafe-inline'",'https://fonts.googleapis.com'],connectSrc:["'self'"]}}}));app.use(express.json({limit:'20kb'}));app.use(cookieParser());
 const authLimiter=rateLimit({windowMs:15*60*1000,limit:10,standardHeaders:'draft-7',legacyHeaders:false});
 const cookie={httpOnly:true,secure:process.env.COOKIE_SECURE==='true',sameSite:'strict',path:'/',maxAge:8*60*60*1000};
 async function init(){await pool.query(`CREATE TABLE IF NOT EXISTS users(id BIGSERIAL PRIMARY KEY,name VARCHAR(80) NOT NULL,email VARCHAR(254) UNIQUE NOT NULL,password_hash TEXT NOT NULL,created_at TIMESTAMPTZ DEFAULT now())`)}
