@@ -1,7 +1,7 @@
 import express from 'express';
 import pg from 'pg';
 import crypto from 'node:crypto';
-const {Pool}=pg;const pool=new Pool({connectionString:process.env.DATABASE_URL});
+const {Pool}=pg;const pool=new Pool({connectionString:process.env.DATABASE_URL||process.env.BOOKING_DATABASE_URL});
 const app=express();app.use(express.json({limit:'20kb'}));const port=Number(process.env.PORT||8082);
 const accommodationUrl=process.env.ACCOMMODATION_URL||'http://127.0.0.1:8081';
 async function init(){await pool.query(`CREATE TABLE IF NOT EXISTS bookings(id BIGSERIAL PRIMARY KEY,reference TEXT UNIQUE NOT NULL,user_id BIGINT NOT NULL,stay_id INT NOT NULL,stay_name TEXT NOT NULL,location TEXT NOT NULL,nightly_price INT NOT NULL,check_in DATE NOT NULL,check_out DATE NOT NULL,guests INT NOT NULL,guest_name TEXT NOT NULL,phone TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'REQUESTED',created_at TIMESTAMPTZ DEFAULT now(),cancelled_at TIMESTAMPTZ)`);await pool.query('CREATE INDEX IF NOT EXISTS idx_holidays_bookings_user ON bookings(user_id,created_at DESC)')}
