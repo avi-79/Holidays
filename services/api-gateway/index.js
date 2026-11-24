@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-const {Pool}=pg;const pool=new Pool({connectionString:process.env.DATABASE_URL});
+const {Pool}=pg;const pool=new Pool({connectionString:process.env.DATABASE_URL||process.env.GATEWAY_DATABASE_URL});
 const app=express();const port=Number(process.env.PORT||8080);
 const secret=process.env.JWT_SECRET;if(!secret||secret.length<32){console.error('JWT_SECRET must be at least 32 characters');process.exit(1)}
 const accommodationUrl=process.env.ACCOMMODATION_URL||'http://127.0.0.1:8081',bookingUrl=process.env.BOOKING_URL||'http://127.0.0.1:8082';
