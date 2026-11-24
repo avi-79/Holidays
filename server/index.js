@@ -89,7 +89,7 @@ function requireAuth(req, res, next) {
   }
 }
 function validDate(value) {
-  if (typeof value !== 'string' || !/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return false;
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(value + 'T00:00:00.000Z');
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
@@ -101,7 +101,7 @@ app.post('/api/auth/register', authLimiter, async (req, res) => {
   const email = String(req.body?.email || '').trim().toLowerCase();
   const password = req.body?.password;
   if (name.length < 2 || name.length > 80) return res.status(400).json({ error: 'Enter a name between 2 and 80 characters.' });
-  if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || email.length > 254) return res.status(400).json({ error: 'Enter a valid email address.' });
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return res.status(400).json({ error: 'Enter a valid email address.' });
   if (typeof password !== 'string' || password.length < 10 || password.length > 72) return res.status(400).json({ error: 'Password must be between 10 and 72 characters.' });
   try {
     const hash = await bcrypt.hash(password, 12);
