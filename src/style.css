@@ -28,3 +28,11 @@ footer a:hover,footer button:hover{color:#092b55}
 footer button{border:0;background:none;padding:0;color:#718294;font-size:11px}
 @media(max-width:800px){.stay .photo{height:205px}.inspire-img,.inspire-img img{min-height:240px;height:240px}}
 @media(max-width:500px){.stay .photo{height:235px}.hero-bg img{object-position:60% center}.hero-bg:after{background:linear-gradient(90deg,#041d39d9 0%,#092b556b 70%,#092b5522 100%)}}
+
+.auth-form{max-width:470px}
+.auth-form .auth-error{background:#fff0ef;color:#a3322a;border:1px solid #f3d1ce}
+.auth-switch{display:flex;justify-content:center;align-items:center;gap:5px;font-size:11px;color:#748596}
+.auth-switch button{border:0;background:none;color:#1d5988;font-size:11px;font-weight:800;text-decoration:underline;padding:0}
+.auth-form button:disabled{opacity:.6;cursor:wait}
+.mytrips{white-space:nowrap}
+@media(max-width:500px){.auth-form{padding:25px 20px}.auth-switch{flex-wrap:wrap}}
