@@ -14,7 +14,9 @@
     "start:booking": "node services/booking-service/index.js",
     "dev:gateway": "node --watch services/api-gateway/index.js",
     "dev:accommodation": "node --watch services/accommodation-service/index.js",
-    "dev:booking": "node --watch services/booking-service/index.js"
+    "dev:booking": "node --watch services/booking-service/index.js",
+    "start:payment": "node services/payment-service/index.js",
+    "dev:payment": "node --watch services/payment-service/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
