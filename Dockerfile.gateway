@@ -1,0 +1,18 @@
+FROM node:20-bookworm-slim
+WORKDIR /app
+
+# Install dependencies, including Vite, to build the frontend.
+COPY package*.json ./
+RUN npm install
+
+# Copy the application and build the browser assets.
+COPY . .
+RUN npm run build
+
+# Remove development dependencies from the runtime image.
+RUN npm prune --omit=dev
+
+ENV NODE_ENV=production
+ENV PORT=8080
+EXPOSE 8080
+CMD ["node", "services/api-gateway/index.js"]
