@@ -2,7 +2,7 @@ import express from 'express';
 import pg from 'pg';
 const { Pool } = pg;
 const app=express(); app.use(express.json({limit:'20kb'}));
-const pool=new Pool({connectionString:process.env.DATABASE_URL});
+const pool=new Pool({connectionString:process.env.DATABASE_URL||process.env.ACCOMMODATION_DATABASE_URL});
 const port=Number(process.env.PORT||8081);
 const seed=[
 [1,'The Palm House','Candolim, Goa','Beach',7800,4.9,'Guest favourite','A tropical hideaway close to the Arabian Sea.','https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1100&q=85',12],
