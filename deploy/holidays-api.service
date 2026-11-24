@@ -1,5 +1,6 @@
+# LEGACY UNIT: single-process SQLite API. Not used by the current microservices deployment.
 [Unit]
-Description=Holidays API
+Description=Holidays Legacy SQLite API (not for current deployment)
 After=network.target
 
 [Service]
