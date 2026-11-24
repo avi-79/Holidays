@@ -36,3 +36,76 @@ footer button{border:0;background:none;padding:0;color:#718294;font-size:11px}
 .auth-form button:disabled{opacity:.6;cursor:wait}
 .mytrips{white-space:nowrap}
 @media(max-width:500px){.auth-form{padding:25px 20px}.auth-switch{flex-wrap:wrap}}
+
+
+/* Holidays visual refresh — editorial travel look, richer cards and responsive polish */
+:root{--ink:#102d4c;--navy:#092b55;--gold:#f2cf54;--muted:#718397}
+body{background:#fff;color:var(--ink)}
+.topline{height:36px;background:#071f3d;letter-spacing:.7px}
+header{height:88px}
+.brand i{width:42px;height:42px;box-shadow:0 5px 14px #f2cf543d}
+.brand b{font-size:27px}
+nav button,nav a{position:relative;padding:10px 0}
+nav button:after,nav a:after{content:"";position:absolute;left:0;right:100%;bottom:2px;height:2px;background:var(--gold);transition:right .2s}
+nav button:hover:after,nav a:hover:after{right:0}
+.hero{height:min(650px,65vw);min-height:500px;background:#102f4e}
+.hero-bg img{object-position:center 48%;filter:saturate(1.05) contrast(1.02)}
+.hero-bg:after{background:linear-gradient(90deg,#041a32e8 0%,#082a4c9c 42%,#082a4c20 100%)}
+.hero-content{padding-top:clamp(90px,11vw,145px)}
+.hero-content>small{letter-spacing:2.8px}
+.hero h1{font-size:clamp(64px,7.4vw,100px);letter-spacing:-5px;line-height:.94}
+.hero p{font-size:16px;max-width:480px}
+.yellow{border-radius:5px;padding:16px 22px;letter-spacing:.15px}
+.searchbar{border-radius:10px;padding:16px;box-shadow:0 18px 55px #102b4c1c}
+.searchbar button{border-radius:6px}
+.intro{padding-top:100px}
+.intro h2,.section-head h2,.why h2{font-size:clamp(30px,3.2vw,42px)}
+.stays{padding-bottom:10px}
+.filters button{padding:10px 18px;border-radius:30px}
+.stay{border:1px solid #e9eef2;border-radius:12px;padding-bottom:18px;box-shadow:0 8px 28px #0b29450a}
+.stay:hover{transform:translateY(-7px);box-shadow:0 20px 45px #0b29451c}
+.stay .photo{height:clamp(210px,22vw,285px)}
+.photo img{object-position:center}
+.photo>span{border-radius:4px;box-shadow:0 3px 12px #102b4c14}
+.heart,.liked{box-shadow:0 3px 12px #102b4c20}
+.stay h3{font-size:18px;letter-spacing:-.35px}
+.stay-bottom{margin-top:19px;padding-top:16px}
+.stay-bottom strong{font-size:17px}
+.inspire{margin-top:120px;min-height:470px}
+.inspire-img,.inspire-img img{min-height:470px}
+.inspire>div:last-child{padding-top:90px}
+.inspire h2{font-size:clamp(42px,4.4vw,58px)}
+.why{padding-top:110px;padding-bottom:115px}
+.why-grid>div{padding:34px 28px;border-color:#e8edf1}
+.why-grid svg{color:#b08b20}
+footer{padding-top:60px;padding-bottom:60px}
+.copyright{padding-top:20px;padding-bottom:20px}
+.detail,.book-form{border-radius:12px;box-shadow:0 25px 80px #061b3050}
+.book-form input{border-radius:6px;padding:13px}
+.dark{border-radius:6px}
+.notice{border-radius:6px}
+@media(max-width:800px){
+ header{height:76px}
+ .hero{height:570px;min-height:0}
+ .hero-content{padding-top:105px}
+ .hero h1{font-size:clamp(58px,10vw,78px)}
+ .searchbar{border-radius:9px}
+ .intro{padding-top:70px}
+ .inspire{margin-top:75px}
+ .inspire>div:last-child{padding:50px 28px}
+ .inspire-img,.inspire-img img{min-height:270px;height:270px}
+ .why{padding:75px 0}
+}
+@media(max-width:500px){
+ .hero{height:525px}
+ .hero h1{font-size:58px;letter-spacing:-3px}
+ .hero-content{padding:92px 22px 0}
+ .hero-caption{right:20px;bottom:18px}
+ .searchbar{padding:9px}
+ .intro h2,.section-head h2,.why h2{font-size:29px}
+ .stay .photo{height:245px}
+ .stay{border-radius:10px}
+ .inspire{margin-top:60px}
+ .inspire>div:last-child{padding:38px 24px}
+ footer{padding:38px 22px}
+}
