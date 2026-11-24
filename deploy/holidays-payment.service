@@ -1,0 +1,17 @@
+[Unit]
+Description=Holidays Payment Demo Service
+After=network.target postgresql.service holidays-booking.service
+[Service]
+Type=simple
+User=holidays
+Group=holidays
+WorkingDirectory=/opt/holidays
+EnvironmentFile=/etc/holidays/microservices.env
+Environment=PORT=8083
+ExecStart=/usr/bin/node /opt/holidays/services/payment-service/index.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target
