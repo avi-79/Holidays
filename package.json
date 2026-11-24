@@ -8,7 +8,13 @@
     "dev:api": "node --watch server/index.js",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "start:gateway": "node services/api-gateway/index.js",
+    "start:accommodation": "node services/accommodation-service/index.js",
+    "start:booking": "node services/booking-service/index.js",
+    "dev:gateway": "node --watch services/api-gateway/index.js",
+    "dev:accommodation": "node --watch services/accommodation-service/index.js",
+    "dev:booking": "node --watch services/booking-service/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -20,7 +26,8 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
