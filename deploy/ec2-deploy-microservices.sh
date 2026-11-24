@@ -18,14 +18,14 @@ npm run build
 npm prune --omit=dev --no-audit --no-fund
 chown -R root:holidays "$APP_DIR"; chmod -R g+rX,o-rwx "$APP_DIR"
 chown root:holidays "$ENV_FILE"; chmod 0640 "$ENV_FILE"
-for service in accommodation booking gateway; do install -m 0644 "$APP_DIR/deploy/holidays-$service.service" "/etc/systemd/system/holidays-$service.service"; done
+for service in accommodation booking payment gateway; do install -m 0644 "$APP_DIR/deploy/holidays-$service.service" "/etc/systemd/system/holidays-$service.service"; done
 systemctl daemon-reload
-systemctl enable --now holidays-accommodation holidays-booking holidays-gateway
+systemctl enable --now holidays-accommodation holidays-booking holidays-payment holidays-gateway
 healthy=0
 for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8080/api/health >/dev/null; then healthy=1; break; fi; sleep 1; done
 if [[ "$healthy" -ne 1 ]]; then
   echo "Gateway health check failed. Service logs:" >&2
-  for service in accommodation booking gateway; do journalctl -u "holidays-$service" -n 35 --no-pager >&2 || true; done
+  for service in accommodation booking payment gateway; do journalctl -u "holidays-$service" -n 35 --no-pager >&2 || true; done
   exit 1
 fi
 if command -v nginx >/dev/null 2>&1; then
@@ -36,5 +36,5 @@ if command -v nginx >/dev/null 2>&1; then
  curl -fsS http://127.0.0.1/api/health
  echo
 fi
-echo "Holidays microservices deployed. Gateway: 8080; Accommodation: 8081; Booking: 8082."
+echo "Holidays microservices deployed. Gateway: 8080; Accommodation: 8081; Booking: 8082; Payment demo: 8083."
 echo "Do not expose service ports 8080-8082 directly to the internet; use Nginx/HTTPS."
