@@ -60,7 +60,13 @@ cp -a "${APP_DIR}/dist/." "${WEB_ROOT}/"
 find "${WEB_ROOT}" -type d -exec chmod 0755 {} +
 find "${WEB_ROOT}" -type f -exec chmod 0644 {} +
 
+# Ensure the existing SQLite directory and database are writable by the service.
+# Do not remove or recreate the database file: it may contain user bookings.
 install -d -o holidays -g holidays -m 0750 /var/lib/holidays
+if [[ -e /var/lib/holidays/holidays.sqlite ]]; then
+  chown holidays:holidays /var/lib/holidays/holidays.sqlite
+  chmod 0640 /var/lib/holidays/holidays.sqlite
+fi
 install -d -o root -g holidays -m 0750 "${ENV_DIR}"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
@@ -131,19 +137,32 @@ echo "API health check:"
 curl --fail --silent http://127.0.0.1:3001/api/health
 echo
 
-# Install the supplied Nginx server block only when one is not already present.
-# Existing Nginx configuration is deliberately preserved.
+# Install and activate the repository-managed Nginx site configuration.
 if command -v nginx >/dev/null 2>&1; then
-  if [[ ! -f /etc/nginx/conf.d/holidays.conf && -d /etc/nginx/conf.d ]]; then
-    install -m 0644 "${APP_DIR}/deploy/holidays.nginx.conf" /etc/nginx/conf.d/holidays.conf
+  install -d -m 0755 /etc/nginx/conf.d
+  install -m 0644 "${APP_DIR}/deploy/holidays.nginx.conf" /etc/nginx/conf.d/holidays.conf
+
+  # Disable the stock Amazon Linux welcome page if it would compete for port 80.
+  if [[ -f /etc/nginx/conf.d/default.conf ]]; then
+    mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled
   fi
+
   if nginx -t; then
     systemctl enable nginx >/dev/null 2>&1 || true
     systemctl reload nginx 2>/dev/null || systemctl start nginx
     echo "Nginx configuration test passed."
   else
-    echo "WARNING: Nginx configuration needs attention. The API is running; inspect sudo nginx -t." >&2
+    echo "ERROR: Nginx configuration test failed. Run sudo nginx -t and inspect the reported file/line." >&2
+    exit 1
   fi
+
+  echo "Checking API through Nginx..."
+  if ! curl --fail --silent --show-error http://127.0.0.1/api/health; then
+    echo "ERROR: API health check through Nginx failed." >&2
+    journalctl -u holidays-api -n 40 --no-pager >&2 || true
+    exit 1
+  fi
+  echo
 else
   echo "Nginx is not installed; install/configure it separately to serve the website." >&2
 fi
