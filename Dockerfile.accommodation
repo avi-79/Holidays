@@ -1,0 +1,16 @@
+FROM node:20-bookworm-slim
+WORKDIR /app
+
+# Native build tools are needed by native Node dependencies in package.json.
+RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY services/accommodation-service ./services/accommodation-service
+
+ENV NODE_ENV=production
+ENV PORT=8081
+EXPOSE 8081
+CMD ["node", "services/accommodation-service/index.js"]
