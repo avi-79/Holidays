@@ -68,6 +68,7 @@ If the host already has the original three databases and only needs the Payment 
 ## 4. Configure the environment
 
 ```bash
+sudo groupadd --system holidays 2>/dev/null || true
 sudo install -d -o root -g holidays -m 0750 /etc/holidays
 sudo cp deploy/microservices.env.example /etc/holidays/microservices.env
 sudo nano /etc/holidays/microservices.env
