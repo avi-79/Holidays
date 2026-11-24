@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: holidays-web
+  namespace: holidays
+spec:
+  type: ClusterIP
+  selector:
+    app: holidays-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
