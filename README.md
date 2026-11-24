@@ -90,7 +90,7 @@ The following deploys both the frontend and API on one EC2 instance. Keep API po
 
 5. Install production dependencies as the service user and start the API:
    ```bash
-   sudo -u holidays npm install --omit=dev --prefix /opt/holidays
+   sudo npm install --omit=dev --prefix /opt/holidays
    sudo chown root:holidays /etc/holidays/holidays.env
    sudo chmod 640 /etc/holidays/holidays.env
    sudo systemctl daemon-reload
