@@ -8,7 +8,6 @@ Group=holidays
 WorkingDirectory=/opt/holidays
 EnvironmentFile=/etc/holidays/microservices.env
 Environment=PORT=8080
-Environment=DATABASE_URL=%E{GATEWAY_DATABASE_URL}
 ExecStart=/usr/bin/node /opt/holidays/services/api-gateway/index.js
 Restart=on-failure
 RestartSec=5
