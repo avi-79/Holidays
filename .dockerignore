@@ -1,4 +1,12 @@
 node_modules
 dist
 .git
+.gitignore
+.env
+.env.*
+!.env.docker.example
+*.sqlite
+*.sqlite3
+*.db
 *.log
+npm-debug.log
