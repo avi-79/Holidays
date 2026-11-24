@@ -5,3 +5,6 @@ CREATE ROLE holidays_booking LOGIN PASSWORD 'CHANGE_ME_BOOKING_PASSWORD';
 CREATE DATABASE holidays_gateway OWNER holidays_gateway;
 CREATE DATABASE holidays_accommodation OWNER holidays_accommodation;
 CREATE DATABASE holidays_booking OWNER holidays_booking;
+
+CREATE ROLE holidays_payment LOGIN PASSWORD 'CHANGE_ME_PAYMENT_PASSWORD';
+CREATE DATABASE holidays_payment OWNER holidays_payment;
