@@ -66,7 +66,7 @@ The following deploys both the frontend and API on one EC2 instance. Keep API po
    ``
    Generate a secret using `openssl rand -hex 32` and replace the placeholder. Keep this file private. `COOKIE_SECURE=false` is only for temporary HTTP testing; configure HTTPS and set it to `true` before using real accounts.
 
-4. Create `/etc/systemd/system/holidays-api.service`:
+4. Install the included systemd unit:
    ```ini
    [Unit]
    Description=Holidays API
@@ -100,25 +100,8 @@ The following deploys both the frontend and API on one EC2 instance. Keep API po
    ``
 
 6. Configure your host Nginx server block (for example `/etc/nginx/conf.d/holidays.conf`):
-   ```nginx
-   server {
-       listen 80;
-       server_name _;
-       root /var/www/holidays;
-       index index.html;
-
-       location /api/ {
-           proxy_pass http://127.0.0.1:3001;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-           proxy_set_header X-Forwarded-Proto $scheme;
-       }
-
-       location / {
-           try_files $uri $uri/ /index.html;
-       }
-   }
+   ```bash
+   sudo cp /opt/holidays/deploy/holidays.nginx.conf /etc/nginx/conf.d/holidays.conf
    ```
    Run `sudo nginx -t && sudo systemctl reload nginx`. Do not add port 3001 to the EC2 security group. The API listens on localhost only.
 
