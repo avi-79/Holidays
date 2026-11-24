@@ -160,7 +160,7 @@ The services bind to loopback on the EC2 host. Only Nginx should be exposed publ
 
 ### Local development
 
-Requires Node.js 20+ and PostgreSQL. Create the three databases/roles using `deploy/postgres/01-create-databases.sql` after replacing its sample passwords. Configure the environment variables from `deploy/microservices.env.example` in your shell (do not commit real secrets), then run each service in its own terminal:
+Requires Node.js 20+ and PostgreSQL. Create the four databases/roles using `deploy/postgres/01-create-databases.sql` after replacing its sample passwords. Configure the environment variables from `deploy/microservices.env.example` in your shell (do not commit real secrets), then run each service in its own terminal:
 
 ```bash
 npm install
@@ -177,7 +177,7 @@ This is a new PostgreSQL-backed deployment path; it does not automatically migra
 
 1. Install Node.js 20+, PostgreSQL and Nginx on the EC2 host. Keep PostgreSQL and all three Node service ports private.
 2. Create the three PostgreSQL roles and databases using `deploy/postgres/01-create-databases.sql`. Replace all sample passwords first.
-3. Create the payment database with `deploy/postgres/02-create-payment-database.sql` (or the payment role/database statements in `01-create-databases.sql`). Copy `deploy/microservices.env.example` to `/etc/holidays/microservices.env`; set all four PostgreSQL URLs, a unique random JWT secret of at least 32 characters, a separate long random `INTERNAL_SERVICE_TOKEN`, and `COOKIE_SECURE=true` after HTTPS is configured. Protect the file with owner root and mode 0640.
+3. The payment role/database is included in `deploy/postgres/01-create-databases.sql`. Copy `deploy/microservices.env.example` to `/etc/holidays/microservices.env`; set all four PostgreSQL URLs, a unique random JWT secret of at least 32 characters, a separate long random `INTERNAL_SERVICE_TOKEN`, and `COOKIE_SECURE=true` after HTTPS is configured. Protect the file with owner root and mode 0640.
 4. Clone/update this repository and run:
 
 ```bash
