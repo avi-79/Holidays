@@ -1,0 +1,18 @@
+[Unit]
+Description=Holidays Accommodation Service
+After=network.target postgresql.service
+[Service]
+Type=simple
+User=holidays
+Group=holidays
+WorkingDirectory=/opt/holidays
+EnvironmentFile=/etc/holidays/microservices.env
+Environment=PORT=8081
+Environment=DATABASE_URL=%E{ACCOMMODATION_DATABASE_URL}
+ExecStart=/usr/bin/node /opt/holidays/services/accommodation-service/index.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target
