@@ -1,17 +1,23 @@
 [Unit]
-Description=Holidays Payment Demo Service
-After=network.target postgresql.service holidays-booking.service
+Description=Holidays Demo Payment Service
+Wants=network-online.target
+After=network-online.target holidays-booking.service
+
 [Service]
 Type=simple
 User=holidays
 Group=holidays
 WorkingDirectory=/opt/holidays
 EnvironmentFile=/etc/holidays/microservices.env
+Environment=NODE_ENV=production
 Environment=PORT=8083
 ExecStart=/usr/bin/node /opt/holidays/services/payment-service/index.js
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true
 PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
 [Install]
 WantedBy=multi-user.target
