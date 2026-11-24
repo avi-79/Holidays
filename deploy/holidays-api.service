@@ -1,0 +1,18 @@
+[Unit]
+Description=Holidays API
+After=network.target
+
+[Service]
+Type=simple
+User=holidays
+Group=holidays
+WorkingDirectory=/opt/holidays
+EnvironmentFile=/etc/holidays/holidays.env
+ExecStart=/usr/bin/node /opt/holidays/server/index.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
