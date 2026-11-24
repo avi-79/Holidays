@@ -166,10 +166,11 @@ Requires Node.js 20+ and PostgreSQL. Create the four databases/roles using `depl
 npm install
 npm run dev:accommodation
 npm run dev:booking
+npm run dev:payment
 npm run dev:gateway
 ```
 
-The Vite development server proxies `/api` to port 8080. Start the payment service with `npm run start:payment` (after setting `PORT=8083` and `DATABASE_URL` to the payment database). In a fifth terminal run `npm run dev` and open http://localhost:5173.
+The Vite development server proxies `/api` to port 8080. Set `PAYMENT_DATABASE_URL`, `INTERNAL_SERVICE_TOKEN`, and `BOOKING_URL` for the payment process before starting it. In a fifth terminal run `npm run dev` and open http://localhost:5173.
 
 ### Amazon Linux 2023 deployment (without Docker)
 
