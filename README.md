@@ -153,10 +153,10 @@ The Holidays application is being separated into three Node.js services. The fro
 | Web frontend | Served by Gateway | Holidays stay discovery and account UI |
 | API Gateway | 8080 | Public API entry point, login/session handling and routing |
 | Accommodation Service | 8081 | Stay catalogue and inventory reservation/release |
-| Booking Service | 8082 | User booking records, create and cancel |
+| Booking Service | 8082 | User booking records, create and cancel |\n| Payment Service (demo) | 8083 | Simulated payment recording and booking confirmation |
 | PostgreSQL | 5432 | Three isolated databases: `holidays_gateway`, `holidays_accommodation`, `holidays_booking` |
 
-The services bind to loopback on the EC2 host. Only Nginx should be exposed publicly. The Gateway owns account records and session cookies; the Booking Service owns booking records; the Accommodation Service owns inventory. Booking calls the Accommodation Service API rather than reading its database. A booking request is a demo request, not a confirmed hotel reservation or a payment.
+The services bind to loopback on the EC2 host. Only Nginx should be exposed publicly. The Gateway owns account records and session cookies; the Booking Service owns booking records; the Accommodation Service owns date-based inventory; the Payment Service stores demo payment records and confirms pending bookings. Booking calls the Accommodation Service API rather than reading its database. A booking starts in `PENDING_PAYMENT`; the Payment Service provides a simulated test-payment step and then marks it `CONFIRMED`. No real card or bank details are collected, and no money is charged.
 
 ### Local development
 
@@ -169,7 +169,7 @@ npm run dev:booking
 npm run dev:gateway
 ```
 
-The Vite development server proxies `/api` to port 8080. In a fourth terminal run `npm run dev` and open http://localhost:5173.
+The Vite development server proxies `/api` to port 8080. Start the payment service with `npm run start:payment` (after setting `PORT=8083` and `DATABASE_URL` to the payment database). In a fifth terminal run `npm run dev` and open http://localhost:5173.
 
 ### Amazon Linux 2023 deployment (without Docker)
 
@@ -177,14 +177,14 @@ This is a new PostgreSQL-backed deployment path; it does not automatically migra
 
 1. Install Node.js 20+, PostgreSQL and Nginx on the EC2 host. Keep PostgreSQL and all three Node service ports private.
 2. Create the three PostgreSQL roles and databases using `deploy/postgres/01-create-databases.sql`. Replace all sample passwords first.
-3. Copy `deploy/microservices.env.example` to `/etc/holidays/microservices.env`; set the three PostgreSQL URLs, a unique random JWT secret of at least 32 characters, and `COOKIE_SECURE=true` after HTTPS is configured. Protect the file with owner root and mode 0640.
+3. Create the payment database with `deploy/postgres/02-create-payment-database.sql` (or the payment role/database statements in `01-create-databases.sql`). Copy `deploy/microservices.env.example` to `/etc/holidays/microservices.env`; set all four PostgreSQL URLs, a unique random JWT secret of at least 32 characters, a separate long random `INTERNAL_SERVICE_TOKEN`, and `COOKIE_SECURE=true` after HTTPS is configured. Protect the file with owner root and mode 0640.
 4. Clone/update this repository and run:
 
 ```bash
 sudo bash deploy/ec2-deploy-microservices.sh
 ```
 
-The script builds the frontend, installs three systemd services, starts them and checks the gateway health endpoint. Nginx proxies API traffic to port 8080 and serves the frontend through the gateway.
+The script builds the frontend, installs four systemd services, starts them and checks the gateway health endpoint. Nginx proxies API traffic to port 8080 and serves the frontend through the gateway.
 
 ### Verify services
 
