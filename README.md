@@ -143,6 +143,66 @@ sudo bash deploy/ec2-deploy.sh
 
 The script keeps the existing SQLite database and environment file. Back up the database before upgrades.
 
+
+## Microservices architecture (current development target)
+
+The Holidays application is being separated into three Node.js services. The frontend remains the existing Holidays experience and sends API requests through one gateway.
+
+| Component | Port | Responsibility |
+|---|---:|---|
+| Web frontend | Served by Gateway | Holidays stay discovery and account UI |
+| API Gateway | 8080 | Public API entry point, login/session handling and routing |
+| Accommodation Service | 8081 | Stay catalogue and inventory reservation/release |
+| Booking Service | 8082 | User booking records, create and cancel |
+| PostgreSQL | 5432 | Three isolated databases: `holidays_gateway`, `holidays_accommodation`, `holidays_booking` |
+
+The services bind to loopback on the EC2 host. Only Nginx should be exposed publicly. The Gateway owns account records and session cookies; the Booking Service owns booking records; the Accommodation Service owns inventory. Booking calls the Accommodation Service API rather than reading its database. A booking request is a demo request, not a confirmed hotel reservation or a payment.
+
+### Local development
+
+Requires Node.js 20+ and PostgreSQL. Create the three databases/roles using `deploy/postgres/01-create-databases.sql` after replacing its sample passwords. Configure the environment variables from `deploy/microservices.env.example` in your shell (do not commit real secrets), then run each service in its own terminal:
+
+```bash
+npm install
+npm run dev:accommodation
+npm run dev:booking
+npm run dev:gateway
+```
+
+The Vite development server proxies `/api` to port 8080. In a fourth terminal run `npm run dev` and open http://localhost:5173.
+
+### Amazon Linux 2023 deployment (without Docker)
+
+This is a new PostgreSQL-backed deployment path; it does not automatically migrate the old SQLite users/bookings database. Back up the existing SQLite file and plan an explicit data migration before switching an existing live instance.
+
+1. Install Node.js 20+, PostgreSQL and Nginx on the EC2 host. Keep PostgreSQL and all three Node service ports private.
+2. Create the three PostgreSQL roles and databases using `deploy/postgres/01-create-databases.sql`. Replace all sample passwords first.
+3. Copy `deploy/microservices.env.example` to `/etc/holidays/microservices.env`; set the three PostgreSQL URLs, a unique random JWT secret of at least 32 characters, and `COOKIE_SECURE=true` after HTTPS is configured. Protect the file with owner root and mode 0640.
+4. Clone/update this repository and run:
+
+```bash
+sudo bash deploy/ec2-deploy-microservices.sh
+```
+
+The script builds the frontend, installs three systemd services, starts them and checks the gateway health endpoint. Nginx proxies API traffic to port 8080 and serves the frontend through the gateway.
+
+### Verify services
+
+```bash
+sudo systemctl status holidays-gateway holidays-accommodation holidays-booking --no-pager
+curl -i http://127.0.0.1:8080/api/health
+curl -i http://127.0.0.1:8080/api/stays
+sudo journalctl -u holidays-gateway -n 60 --no-pager
+sudo journalctl -u holidays-accommodation -n 60 --no-pager
+sudo journalctl -u holidays-booking -n 60 --no-pager
+```
+
+Do not expose ports 8080, 8081, 8082 or 5432 in the EC2 security group. Use Nginx and HTTPS for browser traffic. The old SQLite deployment script and old SQLite API are retained for reference during this migration; use the new microservices deployment script for the PostgreSQL architecture.
+
+## Legacy SQLite database (migration reference)
+
+The earlier single-process SQLite implementation remains in the repository for reference only. The microservices target above uses PostgreSQL. Existing SQLite accounts and bookings are not automatically copied to PostgreSQL.
+
 ## Database
 
 - `users`: unique email and bcrypt password hash (never plaintext passwords)
