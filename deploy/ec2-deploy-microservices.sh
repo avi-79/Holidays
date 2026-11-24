@@ -22,13 +22,14 @@ for service in accommodation booking payment gateway; do install -m 0644 "$APP_D
 systemctl daemon-reload
 systemctl enable --now holidays-accommodation holidays-booking holidays-payment holidays-gateway
 healthy=0
-for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8080/api/health >/dev/null && curl -fsS http://127.0.0.1:8083/health >/dev/null; then healthy=1; break; fi; sleep 1; done
+for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8080/api/health >/dev/null && curl -fsS http://127.0.0.1:8081/health >/dev/null && curl -fsS http://127.0.0.1:8082/health >/dev/null && curl -fsS http://127.0.0.1:8083/health >/dev/null; then healthy=1; break; fi; sleep 1; done
 if [[ "$healthy" -ne 1 ]]; then
   echo "Gateway health check failed. Service logs:" >&2
   for service in accommodation booking payment gateway; do journalctl -u "holidays-$service" -n 35 --no-pager >&2 || true; done
   exit 1
 fi
 if command -v nginx >/dev/null 2>&1; then
+ if [[ -f /etc/nginx/conf.d/default.conf ]]; then mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.disabled-by-holidays; fi
  install -m 0644 "$APP_DIR/deploy/holidays.nginx.conf" /etc/nginx/conf.d/holidays.conf
  nginx -t
  systemctl enable nginx >/dev/null 2>&1 || true
