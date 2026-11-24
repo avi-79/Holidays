@@ -13,7 +13,7 @@ const seed=[
 [6,'Forest & Fern Lodge','Coorg, Karnataka','Nature',5700,4.8,'Peaceful stay','An intimate lodge among coffee estates.','https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1100&q=85',9]
 ];
 async function init(){await pool.query(`CREATE TABLE IF NOT EXISTS accommodations(id INT PRIMARY KEY,name TEXT NOT NULL,location TEXT NOT NULL,category TEXT NOT NULL,nightly_price INT NOT NULL,rating NUMERIC(2,1),tag TEXT,description TEXT,image_url TEXT,available_rooms INT NOT NULL DEFAULT 0 CHECK(available_rooms>=0))`);
-for(const s of seed) await pool.query('INSERT INTO accommodations VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT(id) DO NOTHING',s);
+for(const s of seed) await pool.query('INSERT INTO accommodations(id,name,location,category,nightly_price,rating,tag,description,image_url,available_rooms) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT(id) DO NOTHING',s);
 await pool.query(`CREATE TABLE IF NOT EXISTS inventory_reservations(reference TEXT PRIMARY KEY, accommodation_id INT NOT NULL REFERENCES accommodations(id), rooms INT NOT NULL DEFAULT 1, status TEXT NOT NULL CHECK(status IN ('RESERVED','RELEASED')), created_at TIMESTAMPTZ DEFAULT now())`);
 await pool.query('ALTER TABLE inventory_reservations ADD COLUMN IF NOT EXISTS check_in DATE');
 await pool.query('ALTER TABLE inventory_reservations ADD COLUMN IF NOT EXISTS check_out DATE');
