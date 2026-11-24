@@ -29,4 +29,4 @@ app.delete('/api/bookings/:reference',auth,(q,r)=>proxy(bookingUrl+'/'+encodeURI
 app.post('/api/payments',auth,(q,r)=>proxy(paymentUrl+'/',q,r,{'x-user-id':String(q.userId)}));
 app.get('/api/payments',auth,(q,r)=>proxy(paymentUrl+'/',q,r,{'x-user-id':String(q.userId)}));
 const here=path.dirname(fileURLToPath(import.meta.url));const webRoot=path.resolve(here,'../../dist');app.use(express.static(webRoot));app.get('*',(q,r)=>r.sendFile(path.join(webRoot,'index.html')));
-init().then(()=>app.listen(port,'127.0.0.1',()=>console.log('Holidays API Gateway listening on '+port))).catch(e=>{console.error('Gateway DB init failed',e);process.exit(1)});
+init().then(()=>app.listen(port,'0.0.0.0',()=>console.log('Holidays API Gateway listening on '+port))).catch(e=>{console.error('Gateway DB init failed',e);process.exit(1)});
