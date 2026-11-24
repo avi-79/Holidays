@@ -1,17 +1,23 @@
 [Unit]
-Description=Holidays API Gateway
-After=network.target postgresql.service holidays-accommodation.service holidays-booking.service
+Description=Holidays API Gateway and Web Frontend
+Wants=network-online.target
+After=network-online.target holidays-accommodation.service holidays-booking.service holidays-payment.service
+
 [Service]
 Type=simple
 User=holidays
 Group=holidays
 WorkingDirectory=/opt/holidays
 EnvironmentFile=/etc/holidays/microservices.env
+Environment=NODE_ENV=production
 Environment=PORT=8080
 ExecStart=/usr/bin/node /opt/holidays/services/api-gateway/index.js
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true
 PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
 [Install]
 WantedBy=multi-user.target
