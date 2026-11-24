@@ -63,10 +63,8 @@ find "${WEB_ROOT}" -type f -exec chmod 0644 {} +
 # Ensure the existing SQLite directory and database are writable by the service.
 # Do not remove or recreate the database file: it may contain user bookings.
 install -d -o holidays -g holidays -m 0750 /var/lib/holidays
-if [[ -e /var/lib/holidays/holidays.sqlite ]]; then
-  chown holidays:holidays /var/lib/holidays/holidays.sqlite
-  chmod 0640 /var/lib/holidays/holidays.sqlite
-fi
+find /var/lib/holidays -maxdepth 1 -type f -name 'holidays.sqlite*' \
+  -exec chown holidays:holidays {} + -exec chmod 0640 {} +
 install -d -o root -g holidays -m 0750 "${ENV_DIR}"
 
 if [[ ! -f "${ENV_FILE}" ]]; then
