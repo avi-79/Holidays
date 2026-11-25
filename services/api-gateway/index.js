@@ -11,7 +11,13 @@ const {Pool}=pg;const pool=new Pool({connectionString:process.env.DATABASE_URL||
 const app=express();const port=Number(process.env.PORT||8080);
 const secret=process.env.JWT_SECRET;if(!secret||secret.length<32){console.error('JWT_SECRET must be at least 32 characters');process.exit(1)}
 const accommodationUrl=process.env.ACCOMMODATION_URL||'http://127.0.0.1:8081',bookingUrl=process.env.BOOKING_URL||'http://127.0.0.1:8082',paymentUrl=process.env.PAYMENT_URL||'http://127.0.0.1:8083';
-const { 'img-src': _defaultImgSrc, ...defaultCspDirectives } = helmet.contentSecurityPolicy.getDefaultDirectives();
+const {
+  'img-src': _defaultImgSrc,
+  'font-src': _defaultFontSrc,
+  'style-src': _defaultStyleSrc,
+  'connect-src': _defaultConnectSrc,
+  ...defaultCspDirectives
+} = helmet.contentSecurityPolicy.getDefaultDirectives();
 app.disable('x-powered-by');
 app.use(helmet({contentSecurityPolicy:{directives:{...defaultCspDirectives,imgSrc:["'self'",'data:','https://images.unsplash.com'],fontSrc:["'self'",'https://fonts.gstatic.com'],styleSrc:["'self'","'unsafe-inline'",'https://fonts.googleapis.com'],connectSrc:["'self'"]}}}));
 app.use(express.json({limit:'20kb'}));
