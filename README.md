@@ -1,6 +1,6 @@
 # Holidays
 
-A responsive, TUI-inspired stay discovery and booking demo. Developed by Avinesh.
+A responsive, TUI-inspired stay discovery and booking application. Developed by Avinesh.
 
 ## Cross-platform deployment
 
