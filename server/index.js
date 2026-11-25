@@ -30,6 +30,10 @@ db.exec(
   "CREATE INDEX IF NOT EXISTS idx_bookings_user_created ON bookings(user_id, created_at DESC);"
 );
 
+// Remove legacy placeholder booking rows created by the earlier demo-only flow.
+// This targets only rows explicitly marked as demo-only and leaves other records intact.
+db.prepare("DELETE FROM bookings WHERE status = 'Saved - demo only'").run();
+
 const stays = {
   1: { name: 'The Palm House', location: 'Candolim, Goa', price: 7800 },
   2: { name: 'Misty Mountain Retreat', location: 'Munnar, Kerala', price: 6200 },
